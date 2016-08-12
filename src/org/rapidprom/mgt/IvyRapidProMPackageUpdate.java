@@ -13,8 +13,7 @@ import org.apache.commons.io.IOUtils;
  * 
  * 1. the location of the packages git-based folder 2. the name of the package
  * that is updated 3. the *new* version of the package (note you should have
- * created the folder, jar and ivy files for this new release yourself). 4.
- * current version of RapidProM
+ * created the folder, jar and ivy files for this new release yourself). 
  * 
  * @author svzelst
  *
@@ -24,7 +23,6 @@ public class IvyRapidProMPackageUpdate {
 	private final File libFolder;
 	private final String packageName;
 	private final String newPackageVersion;
-	private final String rapidProMRelease;
 	private final String ivyRegex;
 
 	private static final String GIT_FOLDER_NAME = ".git";
@@ -34,17 +32,14 @@ public class IvyRapidProMPackageUpdate {
 	private static final String DEPENDENCY_CLOSE = "</dependency>";
 	private static final String ORGANISATION_TAG = "org=\"org.rapidprom\"";
 	private static final String NAME_TAG = "name=";
-	private static final String RAPIDPROM_RELEASE_TAG = "rapidprom:release=";
 	private static final String REVISION_TAG_START = "rev=\"";
 
 	public IvyRapidProMPackageUpdate(final File libFolder,
-			final String packageName, final String newPackageVersion,
-			final String rapidProMRelease) {
+			final String packageName, final String newPackageVersion) {
 		this.libFolder = libFolder;
 		this.packageName = packageName;
 		this.newPackageVersion = newPackageVersion;
-		this.rapidProMRelease = rapidProMRelease;
-		ivyRegex = "ivy-.*" + "-" + rapidProMRelease + ".xml";
+		ivyRegex = "ivy-.*.xml";
 
 	}
 
@@ -108,15 +103,13 @@ public class IvyRapidProMPackageUpdate {
 		boolean result = true;
 		result &= dep.contains(ORGANISATION_TAG);
 		result &= dep.contains(NAME_TAG + "\"" + packageName + "\"");
-		result &= dep.contains(
-				RAPIDPROM_RELEASE_TAG + "\"" + rapidProMRelease + "\"");
 		return result;
 	}
 
 	public static void main(String[] args) {
 		File libFolder = new File(args[0]);
 		IvyRapidProMPackageUpdate update = new IvyRapidProMPackageUpdate(
-				libFolder, args[1], args[2], args[3]);
+				libFolder, args[1], args[2]);
 		update.apply();
 	}
 
